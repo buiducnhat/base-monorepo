@@ -9,8 +9,11 @@
     }
   },
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "generate": "npx @better-auth/cli generate --config ./src/index.ts --output ../db/src/schema/auth.ts"
+  },
   "devDependencies": {
+    "@better-auth/cli": "^1.4.2",
     "@erp/config": "workspace:*"
   },
   "peerDependencies": {
