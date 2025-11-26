@@ -1,12 +1,12 @@
-import { useForm } from "@tanstack/react-form";
+import { type Updater, useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import z from "zod";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import Loader from "./loader";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 
 export default function SignInForm({
   onSwitchToSignUp,
@@ -32,7 +32,7 @@ export default function SignInForm({
         {
           onSuccess: () => {
             navigate({
-              to: "/dashboard",
+              to: "/",
             });
             toast.success("Sign in successful");
           },
@@ -68,47 +68,55 @@ export default function SignInForm({
       >
         <div>
           <form.Field name="email">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor={field.name}>Email</Label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  type="email"
-                  value={field.state.value}
-                />
-                {field.state.meta.errors.map((error) => (
-                  <p className="text-red-500" key={error?.message}>
-                    {error?.message}
-                  </p>
-                ))}
-              </div>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched &&
+                field.state.meta.errors.length > 0;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                  <Input
+                    aria-invalid={isInvalid}
+                    id={field.name}
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e: { target: { value: Updater<string> } }) =>
+                      field.handleChange(e.target.value)
+                    }
+                    type="email"
+                    value={field.state.value}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
           </form.Field>
         </div>
 
         <div>
           <form.Field name="password">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor={field.name}>Password</Label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  type="password"
-                  value={field.state.value}
-                />
-                {field.state.meta.errors.map((error) => (
-                  <p className="text-red-500" key={error?.message}>
-                    {error?.message}
-                  </p>
-                ))}
-              </div>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched &&
+                field.state.meta.errors.length > 0;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                  <Input
+                    aria-invalid={isInvalid}
+                    id={field.name}
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e: { target: { value: Updater<string> } }) =>
+                      field.handleChange(e.target.value)
+                    }
+                    type="password"
+                    value={field.state.value}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
           </form.Field>
         </div>
 
