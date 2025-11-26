@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { AnimatedThemeToggler } from "@/components/animated-theme-toggler";
 import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/utils/orpc";
 
@@ -27,6 +28,7 @@ function RouteComponent() {
       <h1>Dashboard</h1>
       <p>Welcome {session.data?.user.name}</p>
       <p>API: {privateData.data?.message}</p>
+      <AnimatedThemeToggler />
     </div>
   );
 }

@@ -1,5 +1,8 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import ReactDOM from "react-dom/client";
 import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
@@ -12,16 +15,28 @@ const router = createRouter({
   context: { orpc, queryClient },
   Wrap({ children }: { children: React.ReactNode }) {
     return (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <TanStackDevtools
+          plugins={[
+            {
+              name: "TanStack Query",
+              render: <ReactQueryDevtoolsPanel />,
+              defaultOpen: true,
+            },
+            {
+              name: "TanStack Router",
+              render: <TanStackRouterDevtoolsPanel />,
+              defaultOpen: false,
+            },
+          ]}
+        />
+      </QueryClientProvider>
     );
   },
 });
 
-declare module "@tanstack/react-router" {
-  type Register = {
-    router: typeof router;
-  };
-}
+declare module "@tanstack/react-router" {}
 
 const rootElement = document.getElementById("app");
 

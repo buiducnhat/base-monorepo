@@ -2,19 +2,16 @@ import type { AppRouterClient } from "@erp/api/routers/index";
 import { createORPCClient } from "@orpc/client";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useState } from "react";
-import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { link, type orpc } from "@/utils/orpc";
-import "../index.css";
+import "@/index.css";
 
 export type RouterAppContext = {
   orpc: typeof orpc;
@@ -51,18 +48,12 @@ function RootComponent() {
       <HeadContent />
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme="system"
         disableTransitionOnChange
-        storageKey="vite-ui-theme"
       >
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          <Outlet />
-        </div>
+        <Outlet />
         <Toaster richColors />
       </ThemeProvider>
-      <TanStackRouterDevtools position="bottom-left" />
-      <ReactQueryDevtools buttonPosition="bottom-right" position="bottom" />
     </>
   );
 }
