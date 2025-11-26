@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { AnimatedThemeToggler } from "@/components/animated-theme-toggler";
-import { orpc } from "@/utils/orpc";
+import { orpc } from "@/lib/orpc";
 
 export const Route = createFileRoute("/(dashboard)/")({
   component: RouteComponent,
@@ -14,7 +13,7 @@ function RouteComponent() {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-2">
+    <div className="">
       <div className="grid gap-6">
         <section className="rounded-lg border p-4">
           <h2 className="mb-2 font-medium">API Status</h2>
@@ -36,7 +35,6 @@ function RouteComponent() {
         <h1>Dashboard</h1>
         <p>Welcome {session.data?.user.name}</p>
         <p>API: {privateData.data?.message}</p>
-        <AnimatedThemeToggler />
       </div>
     </div>
   );

@@ -38,6 +38,9 @@
       },
       "nursery": {
         "noShadow": "off"
+      },
+      "correctness": {
+        "noUnknownTypeSelector": "off"
       }
     }
   }

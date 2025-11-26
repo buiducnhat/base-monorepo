@@ -5,8 +5,8 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import ReactDOM from "react-dom/client";
 import Loader from "./components/loader";
+import { orpc, queryClient } from "./lib/orpc";
 import { routeTree } from "./routeTree.gen";
-import { orpc, queryClient } from "./utils/orpc";
 
 const router = createRouter({
   routeTree,
