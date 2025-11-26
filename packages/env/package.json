@@ -1,14 +1,11 @@
 {
-  "name": "@erp/auth",
+  "name": "@erp/env",
+  "type": "module",
   "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
     "./*": {
       "default": "./src/*.ts"
     }
   },
-  "type": "module",
   "scripts": {},
   "devDependencies": {
     "@erp/config": "workspace:*"
@@ -17,9 +14,8 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "better-auth": "catalog:",
-    "zod": "catalog:",
-    "@erp/db": "workspace:*",
-    "@erp/env": "workspace:*"
+    "@t3-oss/env-core": "^0.13.8",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
   }
 }

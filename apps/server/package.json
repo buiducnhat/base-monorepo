@@ -16,11 +16,11 @@
     "@orpc/openapi": "catalog:",
     "@orpc/zod": "catalog:",
     "better-auth": "catalog:",
-    "dotenv": "catalog:",
-    "zod": "^4.1.11",
+    "zod": "catalog:",
     "@erp/api": "workspace:*",
     "@erp/auth": "workspace:*",
-    "@erp/db": "workspace:*"
+    "@erp/db": "workspace:*",
+    "@erp/env": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.8.2",

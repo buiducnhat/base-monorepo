@@ -23,7 +23,7 @@
     "@orpc/zod": "catalog:",
     "elysia": "catalog:",
     "dotenv": "catalog:",
-    "zod": "^4.1.11",
+    "zod": "catalog:",
     "@erp/auth": "workspace:*",
     "@erp/db": "workspace:*"
   }

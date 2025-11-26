@@ -1,8 +1,8 @@
-import "dotenv/config";
 import { cors } from "@elysiajs/cors";
 import { createContext } from "@erp/api/context";
 import { appRouter } from "@erp/api/routers/index";
 import { auth } from "@erp/auth";
+import { env } from "@erp/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
@@ -30,16 +30,16 @@ const apiHandler = new OpenAPIHandler(appRouter, {
   ],
 });
 
-const _app = new Elysia()
+const app = new Elysia()
   .use(
     cors({
-      origin: process.env.CORS_ORIGIN || "",
+      origin: env.CORS_ORIGINS,
       methods: ["GET", "POST", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
     })
   )
-  .all("/api/auth/*", async (context) => {
+  .all("/auth/*", async (context) => {
     const { request, status } = context;
     if (["POST", "GET"].includes(request.method)) {
       return auth.handler(request);
@@ -60,7 +60,8 @@ const _app = new Elysia()
     });
     return response ?? new Response("Not Found", { status: 404 });
   })
-  .get("/", () => "OK")
-  .listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
-  });
+  .get("/", () => "OK");
+
+app.listen(env.PORT, () => {
+  console.log(`Server is running on ${env.URL}`);
+});
