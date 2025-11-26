@@ -16,6 +16,7 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 - **Authentication** - Better-Auth
 - **PWA** - Progressive Web App support
 - **Turborepo** - Optimized monorepo build system
+- **T3 env** - Environment variables
 
 ## Getting Started
 
@@ -30,7 +31,7 @@ bun install
 This project uses PostgreSQL with Drizzle ORM.
 
 1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
+2. Update your `.env` file with your PostgreSQL connection details.
 
 3. Apply the schema to your database:
 
@@ -58,6 +59,7 @@ erp/
 │   ├── api/         # API layer / business logic
 │   ├── auth/        # Authentication configuration & logic
 │   └── db/          # Database schema & queries
+│   └── env/         # Environment variables
 ```
 
 ## Available Scripts

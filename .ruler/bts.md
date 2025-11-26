@@ -13,7 +13,7 @@ This is a monorepo with the following structure:
 - **`packages/api/`** - Shared API logic and types
 - **`packages/auth/`** - Authentication logic and utilities
 - **`packages/db/`** - Database schema and utilities
-- **`packages/env/`** - Environment variables
+- **`packages/env/`** - Environment variables (T3 env)
 
 ## Available Scripts
 
@@ -44,23 +44,6 @@ Authentication is enabled in this project:
 - Server auth logic is in `apps/server/src/lib/auth.ts`
 - Web app auth client is in `apps/web/src/lib/auth-client.ts`
 
-## Adding More Features
-
-You can add additional addons or deployment options to your project using:
-
-```bash
-bunx create-better-t-stack
-add
-```
-
-Available addons you can add:
-
-- **Documentation**: Starlight, Fumadocs
-- **Linting**: Biome, Oxlint, Ultracite
-- **Other**: Ruler, Turborepo, PWA, Tauri, Husky
-
-You can also add web deployment configurations like Cloudflare Workers support.
-
 ## Project Configuration
 
 This project includes a `bts.jsonc` configuration file that stores your Better-T-Stack settings:
@@ -77,5 +60,3 @@ This project includes a `bts.jsonc` configuration file that stores your Better-T
 - Run commands from the root to execute across all workspaces
 - Run workspace-specific commands with `bun run command-name`
 - Turborepo handles build caching and parallel execution
-- Use `bunx
-create-better-t-stack add` to add more features later
