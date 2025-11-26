@@ -5,9 +5,9 @@ import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export const auth = betterAuth<BetterAuthOptions>({
+  basePath: "/auth",
   database: drizzleAdapter(db, {
     provider: "pg",
-
     schema,
   }),
   trustedOrigins: env.CORS_ORIGINS,
