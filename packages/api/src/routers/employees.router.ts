@@ -23,27 +23,36 @@ export const employeesRouter = {
         departmentId: z.string().optional(),
         positionId: z.string().optional(),
         hireDate: z.string().optional(), // ISO date string
+        metadata: z.record(z.string(), z.unknown()).optional(),
       })
     )
     .handler(async ({ input }) => {
-      const id = crypto.randomUUID();
-      await db.insert(employees).values({
-        id,
-        userId: input.userId,
-        departmentId: input.departmentId,
-        positionId: input.positionId,
-        hireDate: input.hireDate ? new Date(input.hireDate) : undefined,
-      });
-      return { id };
+      const [result] = await db
+        .insert(employees)
+        .values({
+          userId: input.userId,
+          departmentId: input.departmentId,
+          positionId: input.positionId,
+          hireDate: input.hireDate ? new Date(input.hireDate) : undefined,
+          metadata: input.metadata,
+        })
+        .returning({ id: employees.id });
+
+      if (!result) {
+        throw new Error("Failed to create employee");
+      }
+
+      return { id: result.id };
     }),
 
   update: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.number(),
         departmentId: z.string().optional(),
         positionId: z.string().optional(),
         hireDate: z.string().optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
       })
     )
     .handler(async ({ input }) => {
@@ -53,12 +62,13 @@ export const employeesRouter = {
           departmentId: input.departmentId,
           positionId: input.positionId,
           hireDate: input.hireDate ? new Date(input.hireDate) : undefined,
+          metadata: input.metadata,
         })
         .where(eq(employees.id, input.id));
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.number() }))
     .handler(async ({ input }) => {
       await db.delete(employees).where(eq(employees.id, input.id));
     }),

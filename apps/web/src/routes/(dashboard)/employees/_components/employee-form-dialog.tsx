@@ -40,6 +40,7 @@ const schema = z.object({
   departmentId: z.string().optional(),
   positionId: z.string().optional(),
   hireDate: z.string().optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const EmployeeFormDialog = NiceModal.create((props: Props) => {
@@ -79,6 +80,7 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
       hireDate: props.employee?.hireDate
         ? new Date(props.employee.hireDate).toISOString().split("T")[0]
         : undefined,
+      metadata: props.employee?.metadata || undefined,
     } as z.infer<typeof schema>,
     validators: {
       onChange: schema,
@@ -90,6 +92,7 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
           departmentId: value.departmentId || undefined,
           positionId: value.positionId || undefined,
           hireDate: value.hireDate || undefined,
+          metadata: value.metadata,
         });
       } else {
         await updateMutation.mutateAsync({
@@ -97,6 +100,7 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
           departmentId: value.departmentId || undefined,
           positionId: value.positionId || undefined,
           hireDate: value.hireDate || undefined,
+          metadata: value.metadata,
         });
       }
     },

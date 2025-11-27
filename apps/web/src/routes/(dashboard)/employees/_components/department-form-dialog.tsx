@@ -73,24 +73,27 @@ export const DepartmentFormDialog = NiceModal.create((props: Props) => {
     defaultValues: {
       name: props.department?.name || "",
       description: props.department?.description || undefined,
-      managerId: props.department?.managerId || undefined,
+      managerId: props.department?.managerId
+        ? String(props.department.managerId)
+        : undefined,
     } as z.infer<typeof schema>,
     validators: {
       onChange: schema,
     },
     onSubmit: async ({ value }) => {
+      const managerId = value.managerId ? Number(value.managerId) : undefined;
       if (props.mode === "create") {
         await createMutation.mutateAsync({
           name: value.name,
           description: value.description || undefined,
-          managerId: value.managerId || undefined,
+          managerId,
         });
       } else {
         await updateMutation.mutateAsync({
           id: props.department?.id,
           name: value.name,
           description: value.description || undefined,
-          managerId: value.managerId || undefined,
+          managerId,
         });
       }
     },

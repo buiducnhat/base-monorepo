@@ -23,7 +23,7 @@ export const departmentsRouter = {
       z.object({
         name: z.string().min(1),
         description: z.string().optional(),
-        managerId: z.string().optional(),
+        managerId: z.number().optional(),
       })
     )
     .handler(async ({ input }) => {
@@ -43,7 +43,7 @@ export const departmentsRouter = {
         id: z.string(),
         name: z.string().min(1),
         description: z.string().optional(),
-        managerId: z.string().optional(),
+        managerId: z.number().optional(),
       })
     )
     .handler(async ({ input }) => {

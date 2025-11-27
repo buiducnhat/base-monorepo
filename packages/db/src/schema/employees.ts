@@ -1,12 +1,19 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  jsonb,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
 export const departments = pgTable("departments", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
-  managerId: text("manager_id"),
+  managerId: integer("manager_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -29,7 +36,7 @@ export const positions = pgTable("positions", {
 });
 
 export const employees = pgTable("employees", {
-  id: text("id").primaryKey(),
+  id: serial("id").primaryKey(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -40,6 +47,7 @@ export const employees = pgTable("employees", {
     onDelete: "set null",
   }),
   hireDate: timestamp("hire_date"),
+  metadata: jsonb("metadata"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
