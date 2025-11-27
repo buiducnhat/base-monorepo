@@ -1,5 +1,5 @@
 import { IconChevronRight, type TablerIcon } from "@tabler/icons-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,7 +23,6 @@ export function NavMain({
     title: string;
     url: string;
     icon?: TablerIcon;
-    isActive?: boolean;
     items?: {
       title: string;
       url: string;
@@ -32,15 +31,23 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
+          const isActive = currentPath === item.url;
+          const activeChild = item.items?.find(
+            (child) => child.url === currentPath
+          );
+
           if (!item.items || item.items.length === 0) {
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive}>
                   <Link to={item.url}>
                     {item.icon ? <item.icon /> : null}
                     <span>{item.title}</span>
@@ -54,7 +61,7 @@ export function NavMain({
             <Collapsible
               asChild
               className="group/collapsible"
-              defaultOpen={item.isActive}
+              defaultOpen={!!activeChild}
               key={item.title}
             >
               <SidebarMenuItem>
@@ -69,7 +76,10 @@ export function NavMain({
                   <SidebarMenuSub>
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={activeChild?.url === subItem.url}
+                        >
                           <Link to={subItem.url}>
                             {subItem.icon ? <subItem.icon /> : null}
                             <span>{subItem.title}</span>
