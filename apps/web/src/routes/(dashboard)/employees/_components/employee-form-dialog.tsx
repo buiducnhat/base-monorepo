@@ -120,97 +120,119 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
         >
           {props.mode === "create" && (
             <form.Field name="userId">
-              {(field) => (
-                <Field>
-                  <FieldLabel>User ID (Temporary)</FieldLabel>
-                  <FieldContent>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      value={field.state.value}
-                    />
-                  </FieldContent>
-                  <FieldError errors={field.state.meta.errors} />
-                </Field>
-              )}
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      User ID (Temporary)
+                    </FieldLabel>
+                    <FieldContent>
+                      <Input
+                        aria-invalid={isInvalid}
+                        id={field.name}
+                        name={field.name}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        value={field.state.value}
+                      />
+                    </FieldContent>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                );
+              }}
             </form.Field>
           )}
 
           <form.Field name="departmentId">
-            {(field) => (
-              <Field>
-                <FieldLabel>Department</FieldLabel>
-                <FieldContent>
-                  <Select
-                    name={field.name}
-                    onValueChange={(value) => field.handleChange(value)}
-                    value={field.state.value || ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value=" ">None</SelectItem>
-                      {props.departments?.map((dept) => (
-                        <SelectItem key={dept.id} value={dept.id}>
-                          {dept.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FieldContent>
-                <FieldError errors={field.state.meta.errors} />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel>Department</FieldLabel>
+                  <FieldContent>
+                    <Select
+                      aria-invalid={isInvalid}
+                      name={field.name}
+                      onValueChange={(value) => field.handleChange(value)}
+                      value={field.state.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value=" ">None</SelectItem>
+                        {props.departments?.map((dept) => (
+                          <SelectItem key={dept.id} value={dept.id}>
+                            {dept.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FieldContent>
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="positionId">
-            {(field) => (
-              <Field>
-                <FieldLabel>Position</FieldLabel>
-                <FieldContent>
-                  <Select
-                    name={field.name}
-                    onValueChange={(value) => field.handleChange(value)}
-                    value={field.state.value || ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Position" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value=" ">None</SelectItem>
-                      {props.positions?.map((pos) => (
-                        <SelectItem key={pos.id} value={pos.id}>
-                          {pos.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FieldContent>
-                <FieldError errors={field.state.meta.errors} />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel>Position</FieldLabel>
+                  <FieldContent>
+                    <Select
+                      aria-invalid={isInvalid}
+                      name={field.name}
+                      onValueChange={(value) => field.handleChange(value)}
+                      value={field.state.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Position" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value=" ">None</SelectItem>
+                        {props.positions?.map((pos) => (
+                          <SelectItem key={pos.id} value={pos.id}>
+                            {pos.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FieldContent>
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="hireDate">
-            {(field) => (
-              <Field>
-                <FieldLabel>Hire Date</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    type="date"
-                    value={field.state.value || ""}
-                  />
-                </FieldContent>
-                <FieldError errors={field.state.meta.errors} />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Hire Date</FieldLabel>
+                  <FieldContent>
+                    <Input
+                      aria-invalid={isInvalid}
+                      id={field.name}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      type="date"
+                      value={field.state.value || ""}
+                    />
+                  </FieldContent>
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
+              );
+            }}
           </form.Field>
 
           <DialogFooter>

@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { toast } from "sonner";
 import { BaseAlertDialog } from "@/components/base-alert-dialog";
+import { DataTable } from "@/components/datatable";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,7 +22,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { orpc } from "@/lib/orpc";
-import { PositionsDatatable } from "./_components/position-datatable";
 import { PositionFormDialog } from "./_components/position-form-dialog";
 
 export const Route = createFileRoute("/(dashboard)/employees/positions")({
@@ -131,11 +131,7 @@ function PositionsPage() {
         </Button>
       </div>
 
-      <PositionsDatatable
-        columns={columns}
-        data={positions ?? []}
-        loading={isLoading}
-      />
+      <DataTable columns={columns} data={positions ?? []} loading={isLoading} />
     </div>
   );
 }

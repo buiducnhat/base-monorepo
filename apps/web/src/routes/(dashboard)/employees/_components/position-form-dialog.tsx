@@ -113,66 +113,81 @@ export const PositionFormDialog = NiceModal.create((props: Props) => {
           }}
         >
           <form.Field name="name">
-            {(field) => (
-              <Field>
-                <FieldLabel>Name</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    value={field.state.value}
-                  />
-                </FieldContent>
-                <FieldError errors={field.state.meta.errors} />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                  <FieldContent>
+                    <Input
+                      aria-invalid={isInvalid}
+                      id={field.name}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      value={field.state.value}
+                    />
+                  </FieldContent>
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="description">
-            {(field) => (
-              <Field>
-                <FieldLabel>Description</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    value={field.state.value}
-                  />
-                </FieldContent>
-                <FieldError errors={field.state.meta.errors} />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                  <FieldContent>
+                    <Input
+                      aria-invalid={isInvalid}
+                      id={field.name}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      value={field.state.value}
+                    />
+                  </FieldContent>
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="departmentId">
-            {(field) => (
-              <Field>
-                <FieldLabel>Department</FieldLabel>
-                <FieldContent>
-                  <Select
-                    name={field.name}
-                    onValueChange={(value) => field.handleChange(value)}
-                    value={field.state.value || ""}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {props.departments?.map((dept) => (
-                        <SelectItem key={dept.id} value={dept.id}>
-                          {dept.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FieldContent>
-                <FieldError errors={field.state.meta.errors} />
-              </Field>
-            )}
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel>Department</FieldLabel>
+                  <FieldContent>
+                    <Select
+                      aria-invalid={isInvalid}
+                      name={field.name}
+                      onValueChange={(value) => field.handleChange(value)}
+                      value={field.state.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {props.departments?.map((dept) => (
+                          <SelectItem key={dept.id} value={dept.id}>
+                            {dept.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FieldContent>
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
+              );
+            }}
           </form.Field>
 
           <DialogFooter>
