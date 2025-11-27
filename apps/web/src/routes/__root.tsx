@@ -1,3 +1,4 @@
+import NiceModal from "@ebay/nice-modal-react";
 import type { AppRouterClient } from "@erp/api/routers/index";
 import { createORPCClient } from "@orpc/client";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
@@ -51,8 +52,10 @@ function RootComponent() {
         defaultTheme="system"
         disableTransitionOnChange
       >
-        <Outlet />
-        <Toaster richColors />
+        <NiceModal.Provider>
+          <Outlet />
+          <Toaster richColors />
+        </NiceModal.Provider>
       </ThemeProvider>
     </>
   );

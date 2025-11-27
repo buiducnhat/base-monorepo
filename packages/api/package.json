@@ -17,14 +17,15 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@orpc/server": "catalog:",
+    "@erp/auth": "workspace:*",
+    "@erp/db": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
-    "elysia": "catalog:",
     "dotenv": "catalog:",
-    "zod": "catalog:",
-    "@erp/auth": "workspace:*",
-    "@erp/db": "workspace:*"
+    "drizzle-orm": "catalog:",
+    "elysia": "catalog:",
+    "zod": "catalog:"
   }
 }

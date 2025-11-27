@@ -15,7 +15,8 @@
       "@orpc/zod": "^1.11.3",
       "better-auth": "^1.4.2",
       "dotenv": "^17.2.3",
-      "zod": "^4.1.13"
+      "zod": "^4.1.13",
+      "drizzle-orm": "^0.44.7"
     }
   },
   "scripts": {

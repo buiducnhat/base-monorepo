@@ -24,7 +24,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "drizzle-orm": "^0.44.2",
+    "drizzle-orm": "catalog:",
     "pg": "^8.14.1",
     "zod": "catalog:",
     "@erp/env": "workspace:*"

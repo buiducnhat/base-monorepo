@@ -1,6 +1,4 @@
-# Better-T-Stack Project Rules
-
-This is a erp project created with Better-T-Stack CLI.
+# Common project rules
 
 ## Project Structure
 
@@ -32,6 +30,8 @@ All database operations should be run from the server workspace:
 
 Database schema files are located in `apps/server/src/db/schema/`
 
+When updated the database schema, run `bun run db:generate` then `bun run db:migrate` to safely update the changes to the database.
+
 ## API Structure
 
 - oRPC endpoints are in `apps/server/src/api/`
@@ -44,14 +44,14 @@ Authentication is enabled in this project:
 - Server auth logic is in `apps/server/src/lib/auth.ts`
 - Web app auth client is in `apps/web/src/lib/auth-client.ts`
 
-## Project Configuration
+## Web
 
-This project includes a `bts.jsonc` configuration file that stores your Better-T-Stack settings:
-
-- Contains your selected stack configuration (database, ORM, backend, frontend, etc.)
-- Used by the CLI to understand your project structure
-- Safe to delete if not needed
-- Updated automatically when using the `add` command
+- The path for authentication pages is `/auth/*`
+- The path for dashboard pages is `(dashboard)/*`, required authentication
+- Use zustand for global state management
+- Use tanstack form for form handling, https://ui.shadcn.com/docs/forms/tanstack-form for using tanstack form with shadcn ui, https://ui.shadcn.com/docs/components/field for using form field components
+- Use nice-modal-react for modal/dialog handling
+- Component `@/components/data-table` for base table (using tanstack table)
 
 ## Key Points
 

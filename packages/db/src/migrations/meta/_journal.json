@@ -8,6 +8,20 @@
       "when": 1764149732424,
       "tag": "0000_bent_wrecking_crew",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764169703462,
+      "tag": "0001_brief_jetstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764210213489,
+      "tag": "0002_illegal_captain_cross",
+      "breakpoints": true
     }
   ]
 }

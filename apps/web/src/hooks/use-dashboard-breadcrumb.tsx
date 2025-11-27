@@ -1,3 +1,4 @@
+import { useRouterState } from "@tanstack/react-router";
 import * as React from "react";
 import {
   type BreadcrumbItem,
@@ -7,20 +8,15 @@ import {
 export const useDashboardBreadcrumb = () => {
   const breadcrumbs = useBreadcrumbsStore((state) => state.breadcrumbs);
   const setBreadcrumbs = useBreadcrumbsStore((state) => state.setBreadcrumbs);
+  const state = useRouterState();
 
   // Generate default breadcrumb items based on current path
   const generateBreadcrumbs = React.useCallback(() => {
-    const pathSegments = location.pathname.split("/").filter(Boolean);
+    const pathSegments = state.location.pathname.split("/").filter(Boolean);
     const breadcrumbs: BreadcrumbItem[] = [];
 
-    // Always start with App
-    breadcrumbs.push({
-      label: "Dashboard",
-      href: "/",
-    });
-
     // Add subsequent path segments
-    for (let i = 1; i < pathSegments.length; i++) {
+    for (let i = 0; i < pathSegments.length; i++) {
       const segment = pathSegments[i];
       const href = `/${pathSegments.slice(0, i + 1).join("/")}`;
 
@@ -38,7 +34,7 @@ export const useDashboardBreadcrumb = () => {
     }
 
     setBreadcrumbs(breadcrumbs);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, state.location.pathname]);
 
   React.useEffect(() => {
     generateBreadcrumbs();

@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
+import { Route as dashboardEmployeesPositionsRouteImport } from './routes/(dashboard)/employees/positions'
+import { Route as dashboardEmployeesListRouteImport } from './routes/(dashboard)/employees/list'
+import { Route as dashboardEmployeesDepartmentsRouteImport } from './routes/(dashboard)/employees/departments'
 
 const dashboardRouteRoute = dashboardRouteRouteImport.update({
   id: '/(dashboard)',
@@ -27,27 +30,70 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/auth/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
+const dashboardEmployeesPositionsRoute =
+  dashboardEmployeesPositionsRouteImport.update({
+    id: '/employees/positions',
+    path: '/employees/positions',
+    getParentRoute: () => dashboardRouteRoute,
+  } as any)
+const dashboardEmployeesListRoute = dashboardEmployeesListRouteImport.update({
+  id: '/employees/list',
+  path: '/employees/list',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardEmployeesDepartmentsRoute =
+  dashboardEmployeesDepartmentsRouteImport.update({
+    id: '/employees/departments',
+    path: '/employees/departments',
+    getParentRoute: () => dashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth/sign-in': typeof AuthSignInRoute
   '/': typeof dashboardIndexRoute
+  '/employees/departments': typeof dashboardEmployeesDepartmentsRoute
+  '/employees/list': typeof dashboardEmployeesListRoute
+  '/employees/positions': typeof dashboardEmployeesPositionsRoute
 }
 export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
   '/': typeof dashboardIndexRoute
+  '/employees/departments': typeof dashboardEmployeesDepartmentsRoute
+  '/employees/list': typeof dashboardEmployeesListRoute
+  '/employees/positions': typeof dashboardEmployeesPositionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(dashboard)': typeof dashboardRouteRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/(dashboard)/': typeof dashboardIndexRoute
+  '/(dashboard)/employees/departments': typeof dashboardEmployeesDepartmentsRoute
+  '/(dashboard)/employees/list': typeof dashboardEmployeesListRoute
+  '/(dashboard)/employees/positions': typeof dashboardEmployeesPositionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/auth/sign-in' | '/'
+  fullPaths:
+    | '/auth/sign-in'
+    | '/'
+    | '/employees/departments'
+    | '/employees/list'
+    | '/employees/positions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth/sign-in' | '/'
-  id: '__root__' | '/(dashboard)' | '/auth/sign-in' | '/(dashboard)/'
+  to:
+    | '/auth/sign-in'
+    | '/'
+    | '/employees/departments'
+    | '/employees/list'
+    | '/employees/positions'
+  id:
+    | '__root__'
+    | '/(dashboard)'
+    | '/auth/sign-in'
+    | '/(dashboard)/'
+    | '/(dashboard)/employees/departments'
+    | '/(dashboard)/employees/list'
+    | '/(dashboard)/employees/positions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -78,15 +124,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(dashboard)/employees/positions': {
+      id: '/(dashboard)/employees/positions'
+      path: '/employees/positions'
+      fullPath: '/employees/positions'
+      preLoaderRoute: typeof dashboardEmployeesPositionsRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/employees/list': {
+      id: '/(dashboard)/employees/list'
+      path: '/employees/list'
+      fullPath: '/employees/list'
+      preLoaderRoute: typeof dashboardEmployeesListRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/employees/departments': {
+      id: '/(dashboard)/employees/departments'
+      path: '/employees/departments'
+      fullPath: '/employees/departments'
+      preLoaderRoute: typeof dashboardEmployeesDepartmentsRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
   }
 }
 
 interface dashboardRouteRouteChildren {
   dashboardIndexRoute: typeof dashboardIndexRoute
+  dashboardEmployeesDepartmentsRoute: typeof dashboardEmployeesDepartmentsRoute
+  dashboardEmployeesListRoute: typeof dashboardEmployeesListRoute
+  dashboardEmployeesPositionsRoute: typeof dashboardEmployeesPositionsRoute
 }
 
 const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardIndexRoute: dashboardIndexRoute,
+  dashboardEmployeesDepartmentsRoute: dashboardEmployeesDepartmentsRoute,
+  dashboardEmployeesListRoute: dashboardEmployeesListRoute,
+  dashboardEmployeesPositionsRoute: dashboardEmployeesPositionsRoute,
 }
 
 const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(

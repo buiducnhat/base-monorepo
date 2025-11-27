@@ -1,4 +1,5 @@
 import {
+  IconArmchair,
   IconLayoutDashboard,
   IconSitemap,
   IconUsers,
@@ -38,6 +39,11 @@ export function DashboardSidebar({
           title: "Departments",
           url: "/employees/departments",
           icon: IconSitemap,
+        },
+        {
+          title: "Positions",
+          url: "/employees/positions",
+          icon: IconArmchair,
         },
       ],
     },

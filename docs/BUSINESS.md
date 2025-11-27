@@ -1,8 +1,20 @@
-This project is an ERP system for a company.
+# This project is an ERP system for a company.
 
-This modules included:
+## Modules included
 
-- Employee (users)
+- Employees
 - Check-in/Check-out
 - Accounting
 - Inventory
+
+### Employees
+
+- List employees
+- Add employee
+- Edit employee
+- Delete employee
+
+- List departments
+- Add department
+- Edit department
+- Delete department
