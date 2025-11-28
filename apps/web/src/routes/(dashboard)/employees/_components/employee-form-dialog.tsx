@@ -36,7 +36,8 @@ type Props = {
 };
 
 const schema = z.object({
-  userId: z.string().min(1, "User ID is required"),
+  name: z.string().min(1, "Name is required"),
+  email: z.email("Invalid email"),
   departmentId: z.string().optional(),
   positionId: z.string().optional(),
   hireDate: z.string().optional(),
@@ -74,7 +75,8 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
 
   const form = useForm({
     defaultValues: {
-      userId: props.employee?.userId || "",
+      name: props.employee?.user.name || "",
+      email: props.employee?.user.email || "",
       departmentId: props.employee?.departmentId || undefined,
       positionId: props.employee?.positionId || undefined,
       hireDate: props.employee?.hireDate
@@ -88,7 +90,8 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
     onSubmit: async ({ value }) => {
       if (props.mode === "create") {
         await createMutation.mutateAsync({
-          userId: value.userId,
+          name: value.name,
+          email: value.email,
           departmentId: value.departmentId || undefined,
           positionId: value.positionId || undefined,
           hireDate: value.hireDate || undefined,
@@ -123,30 +126,52 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
           }}
         >
           {props.mode === "create" && (
-            <form.Field name="userId">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      User ID (Temporary)
-                    </FieldLabel>
-                    <FieldContent>
-                      <Input
-                        aria-invalid={isInvalid}
-                        id={field.name}
-                        name={field.name}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        value={field.state.value}
-                      />
-                    </FieldContent>
-                    <FieldError errors={field.state.meta.errors} />
-                  </Field>
-                );
-              }}
-            </form.Field>
+            <>
+              <form.Field name="name">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                      <FieldContent>
+                        <Input
+                          aria-invalid={isInvalid}
+                          id={field.name}
+                          name={field.name}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          value={field.state.value}
+                        />
+                      </FieldContent>
+                      <FieldError errors={field.state.meta.errors} />
+                    </Field>
+                  );
+                }}
+              </form.Field>
+              <form.Field name="email">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <FieldContent>
+                        <Input
+                          aria-invalid={isInvalid}
+                          id={field.name}
+                          name={field.name}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          value={field.state.value}
+                        />
+                      </FieldContent>
+                      <FieldError errors={field.state.meta.errors} />
+                    </Field>
+                  );
+                }}
+              </form.Field>
+            </>
           )}
 
           <form.Field name="departmentId">

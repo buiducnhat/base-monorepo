@@ -1,4 +1,5 @@
 import { protectedProcedure, publicProcedure } from "@erp/api/index";
+import { auth } from "@erp/auth";
 import { db } from "@erp/db";
 import { employees } from "@erp/db/schema/employees";
 import { eq } from "drizzle-orm";
@@ -19,7 +20,8 @@ export const employeesRouter = {
   create: protectedProcedure
     .input(
       z.object({
-        userId: z.string(),
+        name: z.string().min(1),
+        email: z.email(),
         departmentId: z.string().optional(),
         positionId: z.string().optional(),
         hireDate: z.string().optional(), // ISO date string
@@ -27,10 +29,23 @@ export const employeesRouter = {
       })
     )
     .handler(async ({ input }) => {
+      const password = Math.random().toString(36).slice(-8); // Generate random password
+      const user = await auth.api.signUpEmail({
+        body: {
+          email: input.email,
+          password,
+          name: input.name,
+        },
+      });
+
+      if (!user) {
+        throw new Error("Failed to create user");
+      }
+
       const [result] = await db
         .insert(employees)
         .values({
-          userId: input.userId,
+          userId: user.user.id,
           departmentId: input.departmentId,
           positionId: input.positionId,
           hireDate: input.hireDate ? new Date(input.hireDate) : undefined,
