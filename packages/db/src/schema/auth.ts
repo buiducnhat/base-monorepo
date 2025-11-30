@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { employees } from "./employees";
+import { userRoles } from "./rbac";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -86,6 +87,7 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [employees.userId],
   }),
+  roles: many(userRoles),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

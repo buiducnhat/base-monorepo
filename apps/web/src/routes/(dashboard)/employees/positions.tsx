@@ -21,7 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { orpc } from "@/lib/orpc";
+import { type Outputs, orpc } from "@/lib/orpc";
 import { PositionFormDialog } from "./_components/position-form-dialog";
 
 export const Route = createFileRoute("/(dashboard)/employees/positions")({
@@ -48,7 +48,9 @@ function PositionsPage() {
     })
   );
 
-  const columns = React.useMemo<ColumnDef<any>[]>(
+  const columns = React.useMemo<
+    ColumnDef<Outputs["positions"]["list"][number]>[]
+  >(
     () => [
       {
         header: "Name",

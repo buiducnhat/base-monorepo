@@ -1,8 +1,8 @@
+import { publicProcedure, requirePermission } from "@erp/api/index";
 import { db } from "@erp/db";
 import { positions } from "@erp/db/schema/employees";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { protectedProcedure, publicProcedure } from "../index";
 
 export const positionsRouter = {
   list: publicProcedure.handler(
@@ -14,32 +14,29 @@ export const positionsRouter = {
       })
   ),
 
-  create: protectedProcedure
+  create: requirePermission("positions.create")
     .input(
       z.object({
         name: z.string().min(1),
-        description: z.string().optional(),
+        description: z.string().optional().nullable(),
         departmentId: z.string().min(1),
       })
     )
     .handler(async ({ input }) => {
-      const id = crypto.randomUUID();
       await db.insert(positions).values({
-        id,
+        id: crypto.randomUUID(),
         name: input.name,
         description: input.description,
         departmentId: input.departmentId,
       });
-      return { id };
     }),
 
-  update: protectedProcedure
+  update: requirePermission("positions.update")
     .input(
       z.object({
         id: z.string(),
         name: z.string().min(1),
-        description: z.string().optional(),
-        departmentId: z.string().min(1),
+        description: z.string().optional().nullable(),
       })
     )
     .handler(async ({ input }) => {
@@ -48,12 +45,11 @@ export const positionsRouter = {
         .set({
           name: input.name,
           description: input.description,
-          departmentId: input.departmentId,
         })
         .where(eq(positions.id, input.id));
     }),
 
-  delete: protectedProcedure
+  delete: requirePermission("positions.delete")
     .input(z.object({ id: z.string() }))
     .handler(async ({ input }) => {
       await db.delete(positions).where(eq(positions.id, input.id));

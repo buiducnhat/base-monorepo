@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
+import { Route as dashboardSettingsRolesRouteImport } from './routes/(dashboard)/settings/roles'
 import { Route as dashboardEmployeesPositionsRouteImport } from './routes/(dashboard)/employees/positions'
 import { Route as dashboardEmployeesListRouteImport } from './routes/(dashboard)/employees/list'
 import { Route as dashboardEmployeesDepartmentsRouteImport } from './routes/(dashboard)/employees/departments'
@@ -29,6 +30,11 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   id: '/auth/sign-in',
   path: '/auth/sign-in',
   getParentRoute: () => rootRouteImport,
+} as any)
+const dashboardSettingsRolesRoute = dashboardSettingsRolesRouteImport.update({
+  id: '/settings/roles',
+  path: '/settings/roles',
+  getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardEmployeesPositionsRoute =
   dashboardEmployeesPositionsRouteImport.update({
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/employees/departments': typeof dashboardEmployeesDepartmentsRoute
   '/employees/list': typeof dashboardEmployeesListRoute
   '/employees/positions': typeof dashboardEmployeesPositionsRoute
+  '/settings/roles': typeof dashboardSettingsRolesRoute
 }
 export interface FileRoutesByTo {
   '/auth/sign-in': typeof AuthSignInRoute
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/employees/departments': typeof dashboardEmployeesDepartmentsRoute
   '/employees/list': typeof dashboardEmployeesListRoute
   '/employees/positions': typeof dashboardEmployeesPositionsRoute
+  '/settings/roles': typeof dashboardSettingsRolesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/(dashboard)/employees/departments': typeof dashboardEmployeesDepartmentsRoute
   '/(dashboard)/employees/list': typeof dashboardEmployeesListRoute
   '/(dashboard)/employees/positions': typeof dashboardEmployeesPositionsRoute
+  '/(dashboard)/settings/roles': typeof dashboardSettingsRolesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/employees/departments'
     | '/employees/list'
     | '/employees/positions'
+    | '/settings/roles'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/sign-in'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/employees/departments'
     | '/employees/list'
     | '/employees/positions'
+    | '/settings/roles'
   id:
     | '__root__'
     | '/(dashboard)'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/employees/departments'
     | '/(dashboard)/employees/list'
     | '/(dashboard)/employees/positions'
+    | '/(dashboard)/settings/roles'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -124,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(dashboard)/settings/roles': {
+      id: '/(dashboard)/settings/roles'
+      path: '/settings/roles'
+      fullPath: '/settings/roles'
+      preLoaderRoute: typeof dashboardSettingsRolesRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
     '/(dashboard)/employees/positions': {
       id: '/(dashboard)/employees/positions'
       path: '/employees/positions'
@@ -153,6 +172,7 @@ interface dashboardRouteRouteChildren {
   dashboardEmployeesDepartmentsRoute: typeof dashboardEmployeesDepartmentsRoute
   dashboardEmployeesListRoute: typeof dashboardEmployeesListRoute
   dashboardEmployeesPositionsRoute: typeof dashboardEmployeesPositionsRoute
+  dashboardSettingsRolesRoute: typeof dashboardSettingsRolesRoute
 }
 
 const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
@@ -160,6 +180,7 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardEmployeesDepartmentsRoute: dashboardEmployeesDepartmentsRoute,
   dashboardEmployeesListRoute: dashboardEmployeesListRoute,
   dashboardEmployeesPositionsRoute: dashboardEmployeesPositionsRoute,
+  dashboardSettingsRolesRoute: dashboardSettingsRolesRoute,
 }
 
 const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(

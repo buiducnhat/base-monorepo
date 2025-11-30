@@ -1,6 +1,7 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -22,32 +23,33 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectNoneItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { orpc } from "@/lib/orpc";
+import { type Outputs, orpc } from "@/lib/orpc";
 
 type Props = {
   mode: "create" | "update";
   refetch?: () => Promise<any>;
-  employees: any[];
-  department?: any;
+  employees: Outputs["employees"]["list"];
+  department?: Outputs["departments"]["list"][number];
 };
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-  managerId: z.string().optional(),
+  description: z.string().optional().nullable(),
+  managerId: z.number().optional().nullable(),
 });
 
 export const DepartmentFormDialog = NiceModal.create((props: Props) => {
-  const { visible, hide } = NiceModal.useModal();
+  const modal = NiceModal.useModal();
 
   const createMutation = useMutation(
     orpc.departments.create.mutationOptions({
       onSuccess: async () => {
         await props.refetch?.();
-        hide();
+        modal.hide();
         toast.success("Department created");
       },
       onError: (error) => {
@@ -60,7 +62,7 @@ export const DepartmentFormDialog = NiceModal.create((props: Props) => {
     orpc.departments.update.mutationOptions({
       onSuccess: async () => {
         await props.refetch?.();
-        hide();
+        modal.hide();
         toast.success("Department updated");
       },
       onError: (error) => {
@@ -71,36 +73,37 @@ export const DepartmentFormDialog = NiceModal.create((props: Props) => {
 
   const form = useForm({
     defaultValues: {
-      name: props.department?.name || "",
-      description: props.department?.description || undefined,
-      managerId: props.department?.managerId
-        ? String(props.department.managerId)
-        : undefined,
+      name: props.department?.name,
+      description: props.department?.description,
+      managerId: props.department?.managerId,
     } as z.infer<typeof schema>,
     validators: {
       onChange: schema,
     },
     onSubmit: async ({ value }) => {
-      const managerId = value.managerId ? Number(value.managerId) : undefined;
       if (props.mode === "create") {
         await createMutation.mutateAsync({
-          name: value.name,
-          description: value.description || undefined,
-          managerId,
+          ...value,
         });
       } else {
         await updateMutation.mutateAsync({
-          id: props.department?.id,
-          name: value.name,
-          description: value.description || undefined,
-          managerId,
+          id: props.department?.id ?? "",
+          ...value,
         });
       }
     },
   });
 
+  React.useEffect(() => {
+    form.reset({
+      name: props.department?.name ?? "",
+      description: props.department?.description,
+      managerId: props.department?.managerId,
+    });
+  }, [props.department, form.reset]);
+
   return (
-    <Dialog onOpenChange={hide} open={visible}>
+    <Dialog onOpenChange={modal.remove} open={modal.visible}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -152,7 +155,7 @@ export const DepartmentFormDialog = NiceModal.create((props: Props) => {
                       name={field.name}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      value={field.state.value}
+                      value={field.state.value ?? undefined}
                     />
                   </FieldContent>
                   <FieldError errors={field.state.meta.errors} />
@@ -172,16 +175,27 @@ export const DepartmentFormDialog = NiceModal.create((props: Props) => {
                     <Select
                       aria-invalid={isInvalid}
                       name={field.name}
-                      onValueChange={(value) => field.handleChange(value)}
-                      value={field.state.value || ""}
+                      onValueChange={(v) =>
+                        v
+                          ? field.handleChange(Number(v))
+                          : field.handleChange(null)
+                      }
+                      value={
+                        field.state.value
+                          ? field.state.value.toString()
+                          : undefined
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Manager" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value=" ">None</SelectItem>
+                        <SelectNoneItem value={null}>None</SelectNoneItem>
                         {props.employees?.map((emp) => (
-                          <SelectItem key={emp.id} value={emp.id}>
+                          <SelectItem
+                            key={emp.id.toString()}
+                            value={emp.id.toString()}
+                          >
                             {emp.user.name}
                           </SelectItem>
                         ))}
@@ -195,7 +209,7 @@ export const DepartmentFormDialog = NiceModal.create((props: Props) => {
           </form.Field>
 
           <DialogFooter>
-            <Button onClick={hide} type="button" variant="outline">
+            <Button onClick={modal.hide} type="button" variant="outline">
               Cancel
             </Button>
             <Button

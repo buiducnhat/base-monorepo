@@ -1,6 +1,7 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -22,36 +23,37 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectNoneItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { orpc } from "@/lib/orpc";
+import { type Outputs, orpc } from "@/lib/orpc";
 
 type Props = {
   mode: "create" | "update";
   refetch?: () => Promise<any>;
-  departments: any[];
-  positions: any[];
-  employee?: any;
+  departments: Outputs["departments"]["list"];
+  positions: Outputs["positions"]["list"];
+  employee?: Outputs["employees"]["list"][number];
 };
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.email("Invalid email"),
-  departmentId: z.string().optional(),
-  positionId: z.string().optional(),
-  hireDate: z.string().optional(),
-  metadata: z.record(z.string(), z.unknown()).optional(),
+  email: z.string().email("Invalid email"),
+  departmentId: z.string().optional().nullable(),
+  positionId: z.string().optional().nullable(),
+  hireDate: z.string().optional().nullable(),
+  metadata: z.record(z.string(), z.unknown()).optional().nullable(),
 });
 
 export const EmployeeFormDialog = NiceModal.create((props: Props) => {
-  const { visible, hide } = NiceModal.useModal();
+  const modal = NiceModal.useModal();
 
   const createMutation = useMutation(
     orpc.employees.create.mutationOptions({
       onSuccess: async () => {
         await props.refetch?.();
-        hide();
+        modal.hide();
         toast.success("Employee created");
       },
       onError: (error) => {
@@ -64,7 +66,7 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
     orpc.employees.update.mutationOptions({
       onSuccess: async () => {
         await props.refetch?.();
-        hide();
+        modal.hide();
         toast.success("Employee updated");
       },
       onError: (error) => {
@@ -77,12 +79,12 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
     defaultValues: {
       name: props.employee?.user.name || "",
       email: props.employee?.user.email || "",
-      departmentId: props.employee?.departmentId || undefined,
-      positionId: props.employee?.positionId || undefined,
+      departmentId: props.employee?.departmentId,
+      positionId: props.employee?.positionId,
       hireDate: props.employee?.hireDate
         ? new Date(props.employee.hireDate).toISOString().split("T")[0]
         : undefined,
-      metadata: props.employee?.metadata || undefined,
+      metadata: props.employee?.metadata,
     } as z.infer<typeof schema>,
     validators: {
       onChange: schema,
@@ -90,27 +92,32 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
     onSubmit: async ({ value }) => {
       if (props.mode === "create") {
         await createMutation.mutateAsync({
-          name: value.name,
-          email: value.email,
-          departmentId: value.departmentId || undefined,
-          positionId: value.positionId || undefined,
-          hireDate: value.hireDate || undefined,
-          metadata: value.metadata,
+          ...value,
         });
       } else {
         await updateMutation.mutateAsync({
-          id: props.employee?.id,
-          departmentId: value.departmentId || undefined,
-          positionId: value.positionId || undefined,
-          hireDate: value.hireDate || undefined,
-          metadata: value.metadata,
+          id: props.employee?.id ?? 0,
+          ...value,
         });
       }
     },
   });
 
+  React.useEffect(() => {
+    form.reset({
+      name: props.employee?.user.name || "",
+      email: props.employee?.user.email || "",
+      departmentId: props.employee?.departmentId,
+      positionId: props.employee?.positionId,
+      hireDate: props.employee?.hireDate
+        ? new Date(props.employee.hireDate).toISOString().split("T")[0]
+        : undefined,
+      metadata: props.employee?.metadata as any,
+    });
+  }, [props.employee, form.reset]);
+
   return (
-    <Dialog onOpenChange={hide} open={visible}>
+    <Dialog onOpenChange={modal.remove} open={modal.visible}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -185,14 +192,18 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
                     <Select
                       aria-invalid={isInvalid}
                       name={field.name}
-                      onValueChange={(value) => field.handleChange(value)}
-                      value={field.state.value || ""}
+                      onValueChange={(value) =>
+                        value
+                          ? field.handleChange(value)
+                          : field.handleChange(null)
+                      }
+                      value={field.state.value || undefined}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Department" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value=" ">None</SelectItem>
+                        <SelectNoneItem value={null}>None</SelectNoneItem>
                         {props.departments?.map((dept) => (
                           <SelectItem key={dept.id} value={dept.id}>
                             {dept.name}
@@ -218,14 +229,18 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
                     <Select
                       aria-invalid={isInvalid}
                       name={field.name}
-                      onValueChange={(value) => field.handleChange(value)}
-                      value={field.state.value || ""}
+                      onValueChange={(value) =>
+                        value
+                          ? field.handleChange(value)
+                          : field.handleChange(null)
+                      }
+                      value={field.state.value || undefined}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Position" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value=" ">None</SelectItem>
+                        <SelectNoneItem value={null}>None</SelectNoneItem>
                         {props.positions?.map((pos) => (
                           <SelectItem key={pos.id} value={pos.id}>
                             {pos.name}
@@ -265,7 +280,7 @@ export const EmployeeFormDialog = NiceModal.create((props: Props) => {
           </form.Field>
 
           <DialogFooter>
-            <Button onClick={hide} type="button" variant="outline">
+            <Button onClick={modal.hide} type="button" variant="outline">
               Cancel
             </Button>
             <Button

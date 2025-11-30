@@ -1,6 +1,10 @@
 import type { AppRouterClient } from "@erp/api/routers/index";
 import { env } from "@erp/env/web";
-import { createORPCClient } from "@orpc/client";
+import {
+  createORPCClient,
+  type InferClientInputs,
+  type InferClientOutputs,
+} from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
@@ -34,3 +38,6 @@ export const link = new RPCLink({
 export const client: AppRouterClient = createORPCClient(link);
 
 export const orpc = createTanstackQueryUtils(client);
+
+export type Inputs = InferClientInputs<AppRouterClient>;
+export type Outputs = InferClientOutputs<AppRouterClient>;

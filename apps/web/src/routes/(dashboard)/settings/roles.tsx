@@ -12,7 +12,6 @@ import React from "react";
 import { toast } from "sonner";
 import { BaseAlertDialog } from "@/components/base-alert-dialog";
 import { DataTable } from "@/components/datatable";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,38 +21,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type Outputs, orpc } from "@/lib/orpc";
-import { DepartmentFormDialog } from "./_components/department-form-dialog";
+import { orpc } from "@/lib/orpc";
+import { RoleFormDialog } from "./_components/role-form-dialog";
 
-export const Route = createFileRoute("/(dashboard)/employees/departments")({
-  component: DepartmentsPage,
+export const Route = createFileRoute("/(dashboard)/settings/roles")({
+  component: RolesPage,
 });
 
-function DepartmentsPage() {
+function RolesPage() {
   const {
-    data: departments,
+    data: roles,
     isLoading,
     refetch,
-  } = useQuery(orpc.departments.list.queryOptions());
-
-  const { data: employees } = useQuery(orpc.employees.list.queryOptions());
+  } = useQuery(orpc.rbac.listRoles.queryOptions());
 
   const deleteMutation = useMutation(
-    orpc.departments.delete.mutationOptions({
+    orpc.rbac.deleteRole.mutationOptions({
       onSuccess: async () => {
         await refetch();
-        toast.success("Department deleted successfully");
+        toast.success("Role deleted successfully");
       },
       onError: () => {
-        toast.error("Failed to delete department");
+        toast.error("Failed to delete role");
       },
     })
   );
 
-  const columns = React.useMemo<
-    ColumnDef<Outputs["departments"]["list"][number]>[]
-  >(
+  const columns = React.useMemo<ColumnDef<any>[]>(
     () => [
+      {
+        header: "ID",
+        accessorKey: "id",
+      },
       {
         header: "Name",
         accessorKey: "name",
@@ -63,20 +62,12 @@ function DepartmentsPage() {
         accessorKey: "description",
       },
       {
-        header: "Manager",
-        accessorKey: "manager",
+        header: "Permissions",
+        accessorKey: "permissions",
         cell: ({ row }) =>
-          row.original.manager ? (
-            <div className="flex items-center gap-1">
-              <Avatar>
-                <AvatarFallback>
-                  {row.original.manager?.user.name[0]}
-                </AvatarFallback>
-                <AvatarImage src={row.original.manager?.user.image || ""} />
-              </Avatar>
-              <span>{row.original.manager?.user.name}</span>
-            </div>
-          ) : null,
+          row.original.permissions?.length
+            ? `${row.original.permissions.length} permissions`
+            : "No permissions",
       },
       {
         header: () => <></>,
@@ -93,11 +84,10 @@ function DepartmentsPage() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  NiceModal.show(DepartmentFormDialog, {
+                  NiceModal.show(RoleFormDialog, {
                     mode: "update",
-                    employees: employees ?? [],
                     refetch,
-                    department: row.original,
+                    role: row.original,
                   });
                 }}
               >
@@ -107,9 +97,8 @@ function DepartmentsPage() {
               <DropdownMenuItem
                 onClick={() =>
                   NiceModal.show(BaseAlertDialog, {
-                    title: "Delete Department",
-                    description:
-                      "Are you sure you want to delete this department?",
+                    title: "Delete Role",
+                    description: "Are you sure you want to delete this role?",
                     onConfirm: () => {
                       deleteMutation.mutate({ id: row.original.id });
                     },
@@ -125,32 +114,27 @@ function DepartmentsPage() {
         ),
       },
     ],
-    [employees, refetch, deleteMutation.mutate]
+    [refetch, deleteMutation.mutate]
   );
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="font-bold text-2xl">Departments</h1>
+        <h1 className="font-bold text-2xl">Roles & Permissions</h1>
         <Button
           onClick={() =>
-            NiceModal.show(DepartmentFormDialog, {
+            NiceModal.show(RoleFormDialog, {
               mode: "create",
-              employees: employees ?? [],
               refetch,
             })
           }
         >
           <PlusIcon />
-          New Department
+          New Role
         </Button>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={departments ?? []}
-        loading={isLoading}
-      />
+      <DataTable columns={columns} data={roles ?? []} loading={isLoading} />
     </div>
   );
 }

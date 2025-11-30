@@ -1,9 +1,11 @@
-import { protectedProcedure, publicProcedure } from "@erp/api/index";
+import { publicProcedure, requirePermission } from "@erp/api/index";
 import { auth } from "@erp/auth";
 import { db } from "@erp/db";
 import { employees } from "@erp/db/schema/employees";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+
+const INITIAL_PASSWORD = "Erp@1234";
 
 export const employeesRouter = {
   list: publicProcedure.handler(
@@ -17,23 +19,22 @@ export const employeesRouter = {
       })
   ),
 
-  create: protectedProcedure
+  create: requirePermission("employees.create")
     .input(
       z.object({
         name: z.string().min(1),
         email: z.email(),
-        departmentId: z.string().optional(),
-        positionId: z.string().optional(),
-        hireDate: z.string().optional(), // ISO date string
-        metadata: z.record(z.string(), z.unknown()).optional(),
+        departmentId: z.string().optional().nullable(),
+        positionId: z.string().optional().nullable(),
+        hireDate: z.coerce.date().optional().nullable(), // ISO date string
+        metadata: z.record(z.string(), z.unknown()).optional().nullable(),
       })
     )
     .handler(async ({ input }) => {
-      const password = Math.random().toString(36).slice(-8); // Generate random password
       const user = await auth.api.signUpEmail({
         body: {
           email: input.email,
-          password,
+          password: INITIAL_PASSWORD,
           name: input.name,
         },
       });
@@ -60,14 +61,14 @@ export const employeesRouter = {
       return { id: result.id };
     }),
 
-  update: protectedProcedure
+  update: requirePermission("employees.update")
     .input(
       z.object({
         id: z.number(),
-        departmentId: z.string().optional(),
-        positionId: z.string().optional(),
-        hireDate: z.string().optional(),
-        metadata: z.record(z.string(), z.unknown()).optional(),
+        departmentId: z.string().optional().nullable(),
+        positionId: z.string().optional().nullable(),
+        hireDate: z.coerce.date().optional().nullable(),
+        metadata: z.record(z.string(), z.unknown()).optional().nullable(),
       })
     )
     .handler(async ({ input }) => {
@@ -82,7 +83,7 @@ export const employeesRouter = {
         .where(eq(employees.id, input.id));
     }),
 
-  delete: protectedProcedure
+  delete: requirePermission("employees.delete")
     .input(z.object({ id: z.number() }))
     .handler(async ({ input }) => {
       await db.delete(employees).where(eq(employees.id, input.id));

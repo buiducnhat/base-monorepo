@@ -4,6 +4,7 @@ import type { RouterClient } from "@orpc/server";
 import { departmentsRouter } from "./departments.router";
 import { employeesRouter } from "./employees.router";
 import { positionsRouter } from "./positions.router";
+import { rbacRouter } from "./rbac.router";
 
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => "OK"),
@@ -14,6 +15,7 @@ export const appRouter = {
   departments: departmentsRouter,
   employees: employeesRouter,
   positions: positionsRouter,
+  rbac: rbacRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

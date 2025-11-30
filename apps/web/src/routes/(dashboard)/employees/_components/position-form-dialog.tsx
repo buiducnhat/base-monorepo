@@ -1,6 +1,7 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -25,29 +26,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { orpc } from "@/lib/orpc";
+import { type Outputs, orpc } from "@/lib/orpc";
 
 type Props = {
   mode: "create" | "update";
   refetch?: () => Promise<any>;
-  departments: any[];
-  position?: any;
+  departments: Outputs["departments"]["list"];
+  position?: Outputs["positions"]["list"][number];
 };
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
   departmentId: z.string().min(1, "Department is required"),
 });
 
 export const PositionFormDialog = NiceModal.create((props: Props) => {
-  const { visible, hide } = NiceModal.useModal();
+  const modal = NiceModal.useModal();
 
   const createMutation = useMutation(
     orpc.positions.create.mutationOptions({
       onSuccess: async () => {
         await props.refetch?.();
-        hide();
+        modal.hide();
         toast.success("Position created");
       },
       onError: (error) => {
@@ -60,7 +61,7 @@ export const PositionFormDialog = NiceModal.create((props: Props) => {
     orpc.positions.update.mutationOptions({
       onSuccess: async () => {
         await props.refetch?.();
-        hide();
+        modal.hide();
         toast.success("Position updated");
       },
       onError: (error) => {
@@ -72,8 +73,8 @@ export const PositionFormDialog = NiceModal.create((props: Props) => {
   const form = useForm({
     defaultValues: {
       name: props.position?.name || "",
-      description: props.position?.description || "",
-      departmentId: props.position?.departmentId || undefined,
+      description: props.position?.description,
+      departmentId: props.position?.departmentId,
     } as z.infer<typeof schema>,
     validators: {
       onChange: schema,
@@ -81,23 +82,27 @@ export const PositionFormDialog = NiceModal.create((props: Props) => {
     onSubmit: async ({ value }) => {
       if (props.mode === "create") {
         await createMutation.mutateAsync({
-          name: value.name,
-          description: value.description || undefined,
-          departmentId: value.departmentId,
+          ...value,
         });
       } else {
         await updateMutation.mutateAsync({
-          id: props.position?.id,
-          name: value.name,
-          description: value.description || undefined,
-          departmentId: value.departmentId,
+          id: props.position?.id ?? "",
+          ...value,
         });
       }
     },
   });
 
+  React.useEffect(() => {
+    form.reset({
+      name: props.position?.name || "",
+      description: props.position?.description,
+      departmentId: props.position?.departmentId ?? "",
+    });
+  }, [props.position, form.reset]);
+
   return (
-    <Dialog onOpenChange={hide} open={visible}>
+    <Dialog onOpenChange={modal.remove} open={modal.visible}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -149,7 +154,7 @@ export const PositionFormDialog = NiceModal.create((props: Props) => {
                       name={field.name}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      value={field.state.value}
+                      value={field.state.value || ""}
                     />
                   </FieldContent>
                   <FieldError errors={field.state.meta.errors} />
@@ -191,7 +196,7 @@ export const PositionFormDialog = NiceModal.create((props: Props) => {
           </form.Field>
 
           <DialogFooter>
-            <Button onClick={hide} type="button" variant="outline">
+            <Button onClick={modal.hide} type="button" variant="outline">
               Cancel
             </Button>
             <Button

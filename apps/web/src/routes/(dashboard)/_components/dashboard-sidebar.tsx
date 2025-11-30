@@ -1,6 +1,8 @@
 import {
   IconArmchair,
+  IconBrandAuth0,
   IconLayoutDashboard,
+  IconSettings,
   IconSitemap,
   IconUsers,
   IconUsersGroup,
@@ -49,6 +51,15 @@ export function DashboardSidebar({
     },
   ];
 
+  const adminRoutes = [
+    {
+      title: "Settings",
+      url: "/settings",
+      icon: IconSettings,
+      items: [{ title: "Roles", url: "/settings/roles", icon: IconBrandAuth0 }],
+    },
+  ];
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -56,6 +67,7 @@ export function DashboardSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={routes} />
+        <NavMain items={adminRoutes} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
